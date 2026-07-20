@@ -41,7 +41,7 @@ After contrastive pretraining, the query encoder is frozen and the projection he
 
 ![Conceptual overview of the Ordinal-aware Cross-Entropy (OCE) framework](assets/OCE_framework.png)
 
-By imposing larger margins on grades farther from the ground truth, OCE discourages clinically implausible distant misclassifications while preserving the ordered progression of DR severity. The hyperparameter `beta` controls the strength of the ordinal adjustment: `beta=0` reduces OCE to standard cross-entropy, while the final experiments use `beta=4`.
+By imposing larger margins on grades farther from the ground truth, OCE discourages clinically implausible distant misclassifications while preserving the ordered progression of DR severity. The hyperparameter `beta` controls the strength of the ordinal adjustment: `beta=0` reduces OCE to standard cross-entropy.
 
 
 ## Project Structure
