@@ -8,6 +8,7 @@
 ## News
 
 - **[2026/07]** The paper was published in *Biomedical Signal Processing and Control*. [[Paper]](https://doi.org/10.1016/j.bspc.2026.110522)
+- **[2025/02]** Our previous work, **KMoCoL: k-Positive Momentum Contrastive Learning for Imbalanced Diabetic Retinopathy Grading**, was published in *IEEE Transactions on Instrumentation and Measurement*. [[Paper]](https://doi.org/10.1109/TIM.2025.3542859)
 
 KCOC is a two-stage framework for diabetic retinopathy (DR) grading. It combines k-positive contrastive representation learning with an ordinal-aware classifier to address class imbalance and the ordered relationships between disease grades.
 
