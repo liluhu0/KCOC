@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use KCOC in your research, please cite the associated paper."
+title: "KCOC: Imbalanced Ordinal Classification for Diabetic Retinopathy Grading with k-Positive Contrastive Learning"
+type: software
+authors:
+  - family-names: Li
+    given-names: Luhu
+  - family-names: Liu
+    given-names: Xuya
+  - family-names: Hou
+    given-names: Xinguo
+  - family-names: Chen
+    given-names: Li
+  - family-names: Wang
+    given-names: Ziyu
+  - family-names: Ding
+    given-names: Qingfeng
+  - family-names: Fu
+    given-names: Shujun
+repository-code: "https://github.com/liluhu0/KCOC"
+license: MIT
+

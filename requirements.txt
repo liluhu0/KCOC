@@ -1,0 +1,14 @@
+torch>=2.1
+torchvision>=0.16
+numpy>=1.23
+pandas>=1.5
+Pillow>=9.5
+opencv-python>=4.8
+scikit-learn>=1.2
+scipy>=1.9
+tqdm>=4.65
+# MIL-VT uses the pre-0.9 timm registry API.
+timm==0.6.13
+matplotlib>=3.7
+seaborn>=0.12
+tensorboardX>=2.6
