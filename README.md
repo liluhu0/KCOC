@@ -28,7 +28,7 @@ This repository is the official implementation of [*Ordinal-aware logit adjustme
 
 KCOC consists of two stages.
 
-### 1. [k-Positive Contrastive Representation Learning](https://so.673.org/scholar?cluster=12562475515912412365&hl=zh-CN&as_sdt=2005&sciodt=0,5)
+### 1. [k-Positive Contrastive Representation Learning](https://ieeexplore.ieee.org/abstract/document/10891867)
 
 This stage builds upon our previous work, **KMoCoL: k-Positive Momentum Contrastive Learning for Imbalanced Diabetic Retinopathy Grading**. Two augmented views of each fundus image are encoded by a query encoder and a momentum-updated key encoder. For every query, KMoCoL samples a fixed number `k` of same-class features from a dynamic queue, encouraging intra-class compactness while reducing the dominance of majority classes. KCOC uses the resulting balanced representations as the foundation for its subsequent ordinal-aware classifier training.
 
