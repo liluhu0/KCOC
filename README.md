@@ -69,17 +69,17 @@ pip install -r requirements.txt
 If you find this work useful, please cite:
 
 ```bibtex
-@article{LI2026110522,
-  title    = {Ordinal-aware logit adjustment and balanced representation learning for diabetic retinopathy grading},
-  journal  = {Biomedical Signal Processing and Control},
-  volume   = {123},
-  pages    = {110522},
-  year     = {2026},
-  issn     = {1746-8094},
-  doi      = {10.1016/j.bspc.2026.110522},
+@article{KCOC,
+  title    = {Ordinal-Aware Logit Adjustment and Balanced Representation Learning for Diabetic Retinopathy Grading},
   author   = {Luhu Li and Xuya Liu and Xinguo Hou and Li Chen and Ziyu Wang and Qingfeng Ding and Shujun Fu},
-  keywords = {Diabetic retinopathy, Imbalanced classification, Ordinal labels, Contrastive learning, Inter-class correlation}
+  journal  = {Biomedical Signal Processing and Control},
+  doi      = {10.1016/j.bspc.2026.110522},
 }
+@article{KMoCoL,
+  title={KMoCoL: k-Positive Momentum Contrastive Learning for Imbalanced Diabetic Retinopathy Grading}, 
+  author={Li, Luhu and Liu, Xuya and Hou, Xinguo and Chen, Li and Zhou, Yuanfeng and Fu, Shujun},
+  journal={IEEE Transactions on Instrumentation and Measurement}, 
+  doi={10.1109/TIM.2025.3542859}}
 ```
 
 ## License
