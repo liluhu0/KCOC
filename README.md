@@ -1,5 +1,7 @@
 # KCOC: Ordinal-Aware Logit Adjustment and Balanced Representation Learning for Diabetic Retinopathy Grading
 
+Our previous work, **KMoCoL: k-Positive Momentum Contrastive Learning for Imbalanced Diabetic Retinopathy Grading**, was published in *IEEE Transactions on Instrumentation and Measurement*. [[Paper]](https://doi.org/10.1109/TIM.2025.3542859)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![BSPC 2026](https://img.shields.io/badge/BSPC-2026-2f6f9f.svg)](https://doi.org/10.1016/j.bspc.2026.110522)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
@@ -7,9 +9,8 @@
 
 ## News
 
-- **[2026/07]** The paper was published in *Biomedical Signal Processing and Control*. [[Paper]](https://doi.org/10.1016/j.bspc.2026.110522)
-- **[2025/02]** Our previous work, **KMoCoL: k-Positive Momentum Contrastive Learning for Imbalanced Diabetic Retinopathy Grading**, was published in *IEEE Transactions on Instrumentation and Measurement*. [[Paper]](https://doi.org/10.1109/TIM.2025.3542859)
-
+- **[2026/05]** The paper was published in *Biomedical Signal Processing and Control*. [[Paper]](https://doi.org/10.1016/j.bspc.2026.110522)
+  
 KCOC is a two-stage framework for diabetic retinopathy (DR) grading. It combines k-positive contrastive representation learning with an ordinal-aware classifier to address class imbalance and the ordered relationships between disease grades.
 
 This repository is the official implementation of [*Ordinal-aware logit adjustment and balanced representation learning for diabetic retinopathy grading*](https://doi.org/10.1016/j.bspc.2026.110522), published in *Biomedical Signal Processing and Control*, Volume 123, Article 110522 (2026).
