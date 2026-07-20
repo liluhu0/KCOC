@@ -37,7 +37,11 @@ This stage builds upon our previous work, **KMoCoL: k-Positive Momentum Contrast
 
 ### 2. Ordinal-Aware Classifier Training
 
+After contrastive pretraining, the query encoder is frozen and the projection head is replaced with a linear classifier. The classifier is then optimized using Ordinal-aware Cross-Entropy (OCE), which introduces a distance-aware logit adjustment based on the ordinal gap between the predicted and ground-truth DR grades.
+
 ![Conceptual overview of the Ordinal-aware Cross-Entropy (OCE) framework](assets/OCE_framework.png)
+
+By imposing larger margins on grades farther from the ground truth, OCE discourages clinically implausible distant misclassifications while preserving the ordered progression of DR severity. The hyperparameter `beta` controls the strength of the ordinal adjustment: `beta=0` reduces OCE to standard cross-entropy, while the final experiments use `beta=4`.
 
 
 ## Project Structure
