@@ -33,6 +33,8 @@ KCOC consists of two stages.
 
 ### 2. Ordinal-Aware Classifier Training
 
+![Conceptual overview of the Ordinal-aware Cross-Entropy (OCE) framework](assets/OCE_framework.png)
+
 
 ## Project Structure
 
