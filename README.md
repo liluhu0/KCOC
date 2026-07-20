@@ -43,27 +43,6 @@ After contrastive pretraining, the query encoder is frozen and the projection he
 
 By imposing larger margins on grades farther from the ground truth, OCE discourages clinically implausible distant misclassifications while preserving the ordered progression of DR severity. The hyperparameter `beta` controls the strength of the ordinal adjustment: `beta=0` reduces OCE to standard cross-entropy.
 
-
-## Project Structure
-
-```text
-KCOC/
-|-- train_kcoc.py          # Training, classifier fitting, and evaluation
-|-- preprocess_fundus.py   # FOV cropping, CLAHE, and resizing
-|-- make_folds.py          # Stratified cross-validation splits
-|-- data_augmentation/     # Image augmentation utilities
-|-- data_manager/          # Dataset and sampling utilities
-|-- loss/                  # OCE and baseline losses
-|-- moco/                  # MoCo and KCL implementations
-|-- moco_models/           # CNN backbone implementations
-|-- models/                # Vision Transformer implementations
-|-- assets/                    # README figures
-|-- CITATION.cff               # Citation metadata
-|-- requirements.txt           # Python dependencies
-|-- LICENSE                    # MIT License
-`-- README.md                  # Project documentation
-```
-
 ## Installation
 
 ### Prerequisites
