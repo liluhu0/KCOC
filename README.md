@@ -1,36 +1,86 @@
-# KCOC：糖尿病视网膜病变有序分类
+# KCOC: Ordinal-Aware Logit Adjustment and Balanced Representation Learning for Diabetic Retinopathy Grading
 
-本仓库对应论文 *Imbalanced Ordinal Classification for Diabetic Retinopathy Grading with k-Positive Contrastive Learning*。统一入口是
-`ordinal_classification/train_kcoc.py`。发布版本已移除绑定作者服务器的历史实验脚本、重复副本及临时分析文件。
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![BSPC 2026](https://img.shields.io/badge/BSPC-2026-2f6f9f.svg)](https://doi.org/10.1016/j.bspc.2026.110522)
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.1%2B-ee4c2c.svg)](https://pytorch.org/)
 
-## 方法与代码对应
+## News
 
-KCOC 分为两个阶段：
+- **[2026/07]** The paper was published in *Biomedical Signal Processing and Control*. [[Paper]](https://doi.org/10.1016/j.bspc.2026.110522)
 
-1. `pretrain`：使用动量编码器、动态字典队列和每个样本固定 `k` 个同类正样本学习表征。
-2. `finetune`：加载第一阶段的 query encoder，冻结编码器，只训练线性分类器，并使用 OCE 损失。
+KCOC is a two-stage framework for diabetic retinopathy (DR) grading. It combines k-positive contrastive representation learning with an ordinal-aware classifier to address class imbalance and the ordered relationships between disease grades.
 
-OCE 实现与论文一致：
+This repository is the official implementation of [*Ordinal-aware logit adjustment and balanced representation learning for diabetic retinopathy grading*](https://doi.org/10.1016/j.bspc.2026.110522), published in *Biomedical Signal Processing and Control*, Volume 123, Article 110522 (2026).
+
+![KCOC Framework](assets/KCOC_framework.png)
+
+## Highlights
+
+- **k-positive contrastive learning:** Uses a fixed number of same-grade positive samples to reduce representation bias toward majority classes.
+- **Dynamic dictionary queue:** Maintains a large and continuously updated set of contrastive features independently of the mini-batch size.
+- **Momentum teacher encoder:** Provides stable key representations through exponential moving average updates.
+- **Ordinal-aware Cross-Entropy:** Introduces distance-aware margins between DR grades through a simple logit adjustment.
+- **Efficient inference:** Discards the projection head and teacher encoder after pretraining, leaving only a standard classification backbone.
+- **Multi-dataset evaluation:** Evaluated on APTOS2019, Messidor-2, and DDR with ResNet-50, DenseNet-121, and ViT-S/16 backbones.
+
+## Method
+
+KCOC consists of two stages.
+
+### 1. k-Positive Contrastive Representation Learning
+
+
+### 2. Ordinal-Aware Classifier Training
+
+
+## Project Structure
 
 ```text
-d(y, y') = 2 |y-y'| / C
-adjusted_logits = logits + beta * d(y, y')
+KCOC/
+|-- ordinal_classification/
+|   |-- train_kcoc.py          # Training, classifier fitting, and evaluation
+|   |-- preprocess_fundus.py   # FOV cropping, CLAHE, and resizing
+|   |-- make_folds.py          # Stratified cross-validation splits
+|   |-- data_augmentation/     # Image augmentation utilities
+|   |-- data_manager/          # Dataset and sampling utilities
+|   |-- loss/                  # OCE and baseline losses
+|   |-- moco/                  # MoCo and KCL implementations
+|   |-- moco_models/           # CNN backbone implementations
+|   `-- models/                # Vision Transformer implementations
+|-- assets/                    # README figures
+|-- CITATION.cff               # Citation metadata
+|-- requirements.txt           # Python dependencies
+|-- LICENSE                    # MIT License
+`-- README.md                  # Project documentation
 ```
 
-其中 `beta=0` 等价于普通交叉熵，论文最终实验使用 `beta=4`。
+## Installation
 
-## 安装
+### Prerequisites
+
+- Python 3.9+
+- A CUDA-capable GPU is recommended
+- PyTorch matching the local CUDA driver
+
+### Install Dependencies
 
 ```bash
+git clone https://github.com/liluhu0/KCOC.git
+cd KCOC
+
 python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Linux/macOS: source .venv/bin/activate
+source .venv/bin/activate  # Linux or macOS
+# .venv\Scripts\Activate.ps1  # Windows PowerShell
+
 pip install -r requirements.txt
 ```
 
-## 数据清单
+## Usage
 
-三个数据集统一使用 CSV 清单，必须包含 `path,label` 两列。`path` 可以是相对 CSV 所在目录的路径，也可以是绝对路径，标签必须为 0–4。
+### 1. Prepare Data Manifests
+
+APTOS2019, Messidor-2, and DDR use CSV manifests with `path` and `label` columns. Paths may be absolute or relative to the manifest. Labels must be integers from 0 to 4.
 
 ```csv
 path,label
@@ -38,59 +88,102 @@ images/0001.png,0
 images/0002.png,2
 ```
 
-- APTOS2019、Messidor-2：准备五折的 `train_fold0.csv` 与 `test_fold0.csv`，一直到 fold 4。
-- DDR：按官方划分准备 `train.csv`、`valid.csv`、`test.csv`。
-
-可使用 `ordinal_classification/make_folds.py` 从一个总清单生成可复现的分层五折划分：
+For APTOS2019 and Messidor-2, generate five stratified folds:
 
 ```bash
-python ordinal_classification/make_folds.py --manifest all.csv --output splits/aptos --folds 5 --seed 591884092
+python ordinal_classification/make_folds.py \
+  --manifest all.csv \
+  --output splits/aptos \
+  --folds 5 \
+  --seed 591884092
 ```
 
-## 眼底图像预处理
+For DDR, prepare manifests following the official train, validation, and test splits.
 
-论文使用视野裁剪、CLAHE 和缩放。整理后的脚本会同时产生处理后的图片及新清单：
+### 2. Preprocess Fundus Images
+
+The preprocessing pipeline crops the retinal field of view, applies CLAHE, resizes the image, and writes a new manifest.
 
 ```bash
-python ordinal_classification/preprocess_fundus.py --manifest all.csv --output data/aptos_clahe --size 512
+python ordinal_classification/preprocess_fundus.py \
+  --manifest all.csv \
+  --output data/aptos_clahe \
+  --size 512
 ```
 
-## 训练
-
-以下参数对应论文的默认设置：ResNet-50、128 维投影、队列 1024、`k=64`、动量 0.999、温度 0.07、第一阶段 200 epoch、第二阶段 30 epoch。
+### 3. Contrastive Pretraining
 
 ```bash
 python ordinal_classification/train_kcoc.py pretrain \
-  --train-csv splits/aptos/train_fold0.csv --output outputs/aptos/fold0 \
-  --backbone resnet50 --image-size 224 --epochs 200 --batch-size 128 \
-  --lr 0.016 --queue-size 1024 --num-positive 64 --momentum 0.999 --temperature 0.07 \
+  --train-csv splits/aptos/train_fold0.csv \
+  --output outputs/aptos/fold0 \
+  --backbone resnet50 \
+  --image-size 224 \
+  --epochs 200 \
+  --batch-size 128 \
+  --lr 0.016 \
+  --queue-size 1024 \
+  --num-positive 64 \
+  --momentum 0.999 \
+  --temperature 0.07 \
   --balanced-sampling
-
-python ordinal_classification/train_kcoc.py finetune \
-  --train-csv splits/aptos/train_fold0.csv --val-csv splits/aptos/test_fold0.csv \
-  --pretrained outputs/aptos/fold0/pretrain_best.pth --output outputs/aptos/fold0 \
-  --backbone resnet50 --image-size 224 --epochs 30 --batch-size 128 --lr 0.1 --beta 4 \
-  --balanced-sampling
-
-python ordinal_classification/train_kcoc.py evaluate \
-  --data-csv splits/aptos/test_fold0.csv \
-  --checkpoint outputs/aptos/fold0/finetune_best.pth --backbone resnet50 --image-size 224
 ```
 
-512×512 输入通常需要按显存降低 batch size。DDR 可将 `--backbone` 改为 `densenet121`。三个子命令都支持 `--device cpu`，便于做小规模验证。
+### 4. Ordinal-Aware Classifier Training
 
-## 输出与复现说明
+```bash
+python ordinal_classification/train_kcoc.py finetune \
+  --train-csv splits/aptos/train_fold0.csv \
+  --val-csv splits/aptos/test_fold0.csv \
+  --pretrained outputs/aptos/fold0/pretrain_best.pth \
+  --output outputs/aptos/fold0 \
+  --backbone resnet50 \
+  --image-size 224 \
+  --epochs 30 \
+  --batch-size 128 \
+  --lr 0.1 \
+  --beta 4 \
+  --balanced-sampling
+```
 
-训练目录保存 checkpoint 和 JSON 指标。评估输出 Accuracy、balanced accuracy、quadratic weighted Kappa、macro/weighted F1、macro recall、macro precision 和 multiclass AUC。
+### 5. Evaluation
 
-数据集本身、五折清单和论文训练权重不包含在当前仓库中，因此在没有原始数据及权重的情况下，无法验证论文表格中的具体数值；但整理后的入口可以完整执行论文描述的两阶段流程。
+```bash
+python ordinal_classification/train_kcoc.py evaluate \
+  --data-csv splits/aptos/test_fold0.csv \
+  --checkpoint outputs/aptos/fold0/finetune_best.pth \
+  --backbone resnet50 \
+  --image-size 224
+```
 
-论文 PDF 位于 [`paper/KCOC_paper.pdf`](paper/KCOC_paper.pdf)。预训练权重的发布说明见 [`MODEL_WEIGHTS.md`](MODEL_WEIGHTS.md)。
+The evaluation command reports accuracy, balanced accuracy, quadratic weighted Kappa, macro F1, weighted F1, macro recall, macro precision, and multiclass AUC. For 512 x 512 inputs, reduce the batch size according to available GPU memory.
 
-## License
+## Datasets and Model Weights
 
-本项目采用 [MIT License](LICENSE)。仓库中包含的第三方代码仍保留其原始版权声明。
+The datasets, data splits, and trained checkpoints are not redistributed in this repository. See [`MODEL_WEIGHTS.md`](MODEL_WEIGHTS.md) for model-weight release options. The published article is available from the [publisher via DOI](https://doi.org/10.1016/j.bspc.2026.110522).
 
 ## Citation
 
-如果本项目对你的研究有帮助，请引用仓库中的论文；GitHub 也会根据 [CITATION.cff](CITATION.cff) 提供引用信息。
+If you find this work useful, please cite:
+
+```bibtex
+@article{LI2026110522,
+  title    = {Ordinal-aware logit adjustment and balanced representation learning for diabetic retinopathy grading},
+  journal  = {Biomedical Signal Processing and Control},
+  volume   = {123},
+  pages    = {110522},
+  year     = {2026},
+  issn     = {1746-8094},
+  doi      = {10.1016/j.bspc.2026.110522},
+  author   = {Luhu Li and Xuya Liu and Xinguo Hou and Li Chen and Ziyu Wang and Qingfeng Ding and Shujun Fu},
+  keywords = {Diabetic retinopathy, Imbalanced classification, Ordinal labels, Contrastive learning, Inter-class correlation}
+}
+```
+
+## License
+
+This project is released under the [MIT License](LICENSE). Third-party source files retain their original copyright notices.
+
+## Acknowledgments
+
+This implementation builds upon the open-source PyTorch, torchvision, timm, and Momentum Contrast communities. We thank the maintainers and contributors of these projects.
