@@ -77,7 +77,7 @@ If you find this work useful, please cite:
 }
 @article{KMoCoL,
   title={KMoCoL: k-Positive Momentum Contrastive Learning for Imbalanced Diabetic Retinopathy Grading}, 
-  author={Li, Luhu and Liu, Xuya and Hou, Xinguo and Chen, Li and Zhou, Yuanfeng and Fu, Shujun},
+  author={Luhu Li and Xuya Liu and Xinguo Hou and Li Chen and Yuanfeng Zhou and Shujun Fu},
   journal={IEEE Transactions on Instrumentation and Measurement}, 
   doi={10.1109/TIM.2025.3542859}}
 ```
