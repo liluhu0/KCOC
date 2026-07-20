@@ -35,7 +35,7 @@ KCOC consists of two stages.
 This stage builds upon our previous work, **KMoCoL: k-Positive Momentum Contrastive Learning for Imbalanced Diabetic Retinopathy Grading**. Two augmented views of each fundus image are encoded by a query encoder and a momentum-updated key encoder. For every query, KMoCoL samples a fixed number `k` of same-class features from a dynamic queue, encouraging intra-class compactness while reducing the dominance of majority classes. KCOC uses the resulting balanced representations as the foundation for its subsequent ordinal-aware classifier training.
 
 
-### 2. Ordinal-Aware Classifier Training
+### 2. Ordinal-Aware Logit Adjustment
 
 After contrastive pretraining, the query encoder is frozen and the projection head is replaced with a linear classifier. The classifier is then optimized using Ordinal-aware Cross-Entropy (OCE), which introduces a distance-aware logit adjustment based on the ordinal gap between the predicted and ground-truth DR grades.
 
